@@ -32,6 +32,7 @@ def infix_to_rpn(infix_expr: str, debug: bool = False) -> list[str]:
         if debug and not c.isspace():
             print(f"token={c}\n{queue=}\n{stack=}\n")
 
+    queue.append(number)
     while stack:
         queue.append(stack.pop())
 
