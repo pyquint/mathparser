@@ -1,9 +1,9 @@
 def main():
-    # expr = "3 + 4 * 2 / ( 1 - 5 )"
-    expr = input("Enter expression: ")
-    parsed_expr = infix_to_rpn(expr)
+    expr = "3 + 4 * 2 / ( 1 - 5 )"
+    # expr = input("Enter expression: ")
+    parsed_expr = infix_to_rpn(expr, debug=True)
     # print(parsed_expr)
-    print(f"= {compute_rpn(parsed_expr)}")
+    print(f"= {compute_rpn(parsed_expr, debug=True)}")
 
 
 def infix_to_rpn(infix_expr: str, debug: bool = False) -> list[str]:
@@ -32,7 +32,9 @@ def infix_to_rpn(infix_expr: str, debug: bool = False) -> list[str]:
         if debug and not c.isspace():
             print(f"token={c}\n{queue=}\n{stack=}\n")
 
-    queue.append(number)
+    if number:
+        queue.append(number)
+
     while stack:
         queue.append(stack.pop())
 
