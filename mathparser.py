@@ -1,8 +1,8 @@
 def main():
-    expr = "3 + 4 * 2 / ( 1 - 5 )"
-    # expr = input("Enter expression: ")
+    # expr = "3 + 4 * 2 / ( 1 - 5 )"
+    expr = input("Enter expression: ")
     parsed_expr = infix_to_rpn(expr, debug=True)
-    # print(parsed_expr)
+    print(parsed_expr)
     print(f"= {compute_rpn(parsed_expr, debug=True)}")
 
 
@@ -12,17 +12,19 @@ def infix_to_rpn(infix_expr: str, debug: bool = False) -> list[str]:
     number = ""
 
     for c in infix_expr:
-        if not valid_token(c):
+        if c.isspace():
+            continue
+        elif not valid_token(c):
             raise ValueError(f"Invalid token '{c}'.")
 
-        if c.isdigit():
+        if isdigit := c.isdigit():
             number += c
-        elif number:
+        elif number and not isdigit:
             queue.append(number)
             number = ""
 
         if c in "*/+-" or c == "(":
-            if stack and precedence(c) == precedence(stack[-1]):
+            while stack and (precedence(c) == precedence(stack[-1])):
                 queue.append(stack.pop())
             stack.append(c)
         elif c == ")":
@@ -31,9 +33,6 @@ def infix_to_rpn(infix_expr: str, debug: bool = False) -> list[str]:
 
         if debug and not c.isspace():
             print(f"token={c}\n{queue=}\n{stack=}\n")
-
-    if number:
-        queue.append(number)
 
     while stack:
         queue.append(stack.pop())
@@ -69,7 +68,7 @@ def compute_rpn(rpn_expr: list, debug: bool = False) -> str:
 
 
 def valid_token(c: str) -> bool:
-    return c.isdigit() or c in "*/+-()^ "
+    return c.isdigit() or c in "*/+-()^"
 
 
 def precedence(op: str) -> int:
